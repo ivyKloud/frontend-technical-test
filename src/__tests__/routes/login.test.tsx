@@ -5,7 +5,7 @@ import { LoginPage } from "../../routes/login";
 import {
   AuthenticationContext,
   AuthenticationState,
-} from "../../contexts/authentication";
+} from "../../contexts/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ChakraProvider } from "@chakra-ui/react";
 import { ListenerFn, RouterEvents } from "@tanstack/react-router";
@@ -99,7 +99,7 @@ describe("routes/login", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText(/an unknown error occured, please try again later/i),
+          screen.getByText(/an unknown error occured, please try again later/i)
         ).toBeInTheDocument();
       });
     });
@@ -119,7 +119,7 @@ describe("routes/login", () => {
         expect(onBeforeNavigateMock).toHaveBeenCalledWith(
           expect.objectContaining({
             toLocation: expect.objectContaining({ pathname: "/" }),
-          }),
+          })
         );
       });
     });
@@ -140,7 +140,7 @@ describe("routes/login", () => {
         expect(onBeforeNavigateMock).toHaveBeenCalledWith(
           expect.objectContaining({
             toLocation: expect.objectContaining({ pathname: "/profile" }),
-          }),
+          })
         );
       });
     });

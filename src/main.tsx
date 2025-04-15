@@ -10,7 +10,7 @@ import { routeTree } from "./routeTree.gen";
 import {
   AuthenticationProvider,
   useAuthentication,
-} from "./contexts/authentication";
+} from "./contexts/AuthContext";
 
 // Create a new router instance
 const router = createRouter({
@@ -44,6 +44,6 @@ if (!rootElement.innerHTML) {
           </AuthenticationProvider>
         </ChakraProvider>
       </QueryClientProvider>
-    </StrictMode>,
+    </StrictMode>
   );
 }

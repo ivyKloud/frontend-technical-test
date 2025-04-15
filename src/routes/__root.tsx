@@ -14,7 +14,7 @@ import {
 import {
   AuthenticationState,
   useAuthentication,
-} from "../contexts/authentication";
+} from "../contexts/AuthContext";
 import { UserDropdown } from "../components/user-dropdown";
 import { Plus } from "@phosphor-icons/react";
 
