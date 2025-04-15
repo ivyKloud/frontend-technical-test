@@ -1,14 +1,4 @@
-export class UnauthorizedError extends Error {
-  constructor() {
-    super('Unauthorized');
-  }
-}
-
-export class NotFoundError extends Error {
-  constructor() {
-    super('Not Found');
-  }
-}
+import { NotFoundError, UnauthorizedError } from "../errors";
 
 export const checkStatus = (response: Response) => {
   if (response.status === 401) {
@@ -18,4 +8,4 @@ export const checkStatus = (response: Response) => {
     throw new NotFoundError();
   }
   return response;
-}
+};
