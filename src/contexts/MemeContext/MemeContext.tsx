@@ -6,8 +6,8 @@ export type MemeContextProps = {
   memesComments: Record<string, MemeComment[]>
   users: Record<string, User>
   setMemes: (memes: Meme[]) => void
-  setMemeComments: (memeId: string, memeComments: MemeComment[]) => void
-  setUser: (userId: string, userData: User) => void
+  setMemesComments: (memesComments: Record<string, MemeComment[]>) => void
+  setUsers: (users: Record<string, User>) => void
 }
 
 export const MemeContext = createContext<MemeContextProps>({
@@ -15,8 +15,8 @@ export const MemeContext = createContext<MemeContextProps>({
   memesComments: {},
   users: {},
   setMemes: () => {},
-  setMemeComments: () => {},
-  setUser: () => {},
+  setMemesComments: () => {},
+  setUsers: () => {},
 })
 
 export const useMemeContext = () => {
@@ -28,8 +28,19 @@ export const useMemeContext = () => {
   return context
 }
 
-export const useMemes = () => useMemeContext().memes
-export const useMemeComments = (id: string) => useMemeContext().memesComments[id]
+export const useMemes = () => ({
+  memes: useMemeContext().memes,
+  setMemes: useMemeContext().setMemes,
+})
+export const useUsers = () => ({
+  users: useMemeContext().users,
+  setUsers: useMemeContext().setUsers,
+})
+export const useMemeComments = () => ({
+  memesComments: useMemeContext().memesComments,
+  setMemesComments: useMemeContext().setMemesComments,
+})
+
 export const useUser = (id: string) => useMemeContext().users[id]
 
 export const MemeProvider = ({ children }: { children: ReactNode }) => {
@@ -37,27 +48,13 @@ export const MemeProvider = ({ children }: { children: ReactNode }) => {
   const [memesComments, setMemesComments] = useState<Record<string, MemeComment[]>>({})
   const [users, setUsers] = useState<Record<string, User>>({})
 
-  const setMemeComments = (memeId: string, memeComments: MemeComment[]) => {
-    setMemesComments((prev) => ({
-      ...prev,
-      [memeId]: memeComments,
-    }))
-  }
-
-  const setUser = (userId: string, userData: User) => {
-    setUsers((prev) => ({
-      ...prev,
-      [userId]: userData,
-    }))
-  }
-
   const updatedContext: MemeContextProps = {
     memes,
     memesComments,
     users,
     setMemes,
-    setMemeComments,
-    setUser,
+    setMemesComments,
+    setUsers,
   }
 
   return <MemeContext.Provider value={updatedContext}>{children}</MemeContext.Provider>
