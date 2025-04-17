@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import {
   Box,
   Button,
@@ -10,11 +11,11 @@ import {
   Textarea,
   VStack,
 } from '@chakra-ui/react'
-import { Link } from '@tanstack/react-router'
-import { MemeEditor } from '../components/meme-editor'
-import { useMemo, useState } from 'react'
-import { MemePictureProps } from '../components/meme-picture'
 import { Plus, Trash } from '@phosphor-icons/react'
+import { Link } from '@tanstack/react-router'
+
+import { MemeEditor } from '../components/MemeEditor'
+import { MemePictureProps } from '../components/MemePicture'
 
 type Picture = {
   url: string
