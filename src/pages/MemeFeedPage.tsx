@@ -1,13 +1,14 @@
 import { Flex, StackDivider, VStack } from '@chakra-ui/react'
-
-import { Loader } from '../components/Loader'
-import { useMemeFeed } from '../hooks/useMemeFeed'
-import { MemeDisplay } from '../components/MemeDisplay'
-import { useMemeContext } from '../contexts/MemeContext'
 import { useEffect } from 'react'
 
+import { Loader } from '../components/Loader'
+import { LoadNextButton } from '../components/LoadNextButton'
+import { MemeDisplay } from '../components/MemeDisplay'
+import { useMemeContext } from '../contexts/MemeContext'
+import { useMemeFeed } from '../hooks/useMemeFeed'
+
 export const MemeFeedPage = () => {
-  const { isLoading } = useMemeFeed()
+  const { isLoading, loadNextPage } = useMemeFeed()
   const { memes } = useMemeContext()
   //   const isLoading = false
   useEffect(() => {
@@ -22,8 +23,9 @@ export const MemeFeedPage = () => {
       hello
       <VStack p={4} width="full" maxWidth={800} divider={<StackDivider border="gray.200" />}>
         {memes?.map((meme) => {
-          return <MemeDisplay meme={meme} />
+          return <MemeDisplay meme={meme} key={meme.id} />
         })}
+        <LoadNextButton loadNextPage={loadNextPage} />
       </VStack>
     </Flex>
   )
