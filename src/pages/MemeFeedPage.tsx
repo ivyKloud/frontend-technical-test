@@ -8,7 +8,7 @@ import { useMemeContext } from '../contexts/MemeContext'
 import { useMemeFeed } from '../hooks/useMemeFeed'
 
 export const MemeFeedPage = () => {
-  const { isLoading, loadNextPage } = useMemeFeed()
+  const { isLoading, fetchNextPage, hasNextPage } = useMemeFeed()
   const { memes } = useMemeContext()
   //   const isLoading = false
   useEffect(() => {
@@ -25,7 +25,7 @@ export const MemeFeedPage = () => {
         {memes?.map((meme) => {
           return <MemeDisplay meme={meme} key={meme.id} />
         })}
-        <LoadNextButton loadNextPage={loadNextPage} />
+        {hasNextPage && <LoadNextButton loadNextPage={fetchNextPage} />}
       </VStack>
     </Flex>
   )
