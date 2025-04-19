@@ -25,4 +25,5 @@ export type MemeComment = {
   memeId: string
   content: string
   createdAt: string
+  author: User
 }

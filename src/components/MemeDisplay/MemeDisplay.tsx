@@ -4,9 +4,12 @@ import { format } from 'timeago.js'
 import { MemePicture } from '../MemePicture'
 import { Meme } from '../../types'
 import { CaretDown, CaretUp, Chat } from '@phosphor-icons/react'
+import { useState } from 'react'
+import { MemeComments } from '../MemeComments'
 
 export const MemeDisplay = ({ meme }: { meme: Meme }) => {
   const { id, pictureUrl, texts, description, createdAt, commentsCount, author } = meme
+  const [openedCommentSection, setOpenedCommentSection] = useState<string | null>(null)
 
   return (
     <VStack key={id} p={4} width="full" align="stretch">
@@ -44,87 +47,16 @@ export const MemeDisplay = ({ meme }: { meme: Meme }) => {
             <LinkOverlay
               data-testid={`meme-comments-section-${id}`}
               cursor="pointer"
-              // onClick={() =>
-              //   setOpenedCommentSection(openedCommentSection === id ? null : id)
-              // }
+              onClick={() => setOpenedCommentSection(openedCommentSection === id ? null : id)}
             >
               <Text data-testid={`meme-comments-count-${id}`}>{commentsCount} comments</Text>
             </LinkOverlay>
-            {/* <Icon as={openedCommentSection !== id ? CaretDown : CaretUp} ml={2} mt={1} /> */}
-            <Icon as={CaretDown} ml={2} mt={1} />
+            <Icon as={openedCommentSection !== id ? CaretDown : CaretUp} ml={2} mt={1} />
           </Flex>
           <Icon as={Chat} />
         </Flex>
       </LinkBox>
-      {/* <Collapse in={openedCommentSection === id} animateOpacity>
-  <Box mb={6}>
-    <form
-      onSubmit={(event) => {
-        event.preventDefault()
-        if (commentContent[id]) {
-          mutate({
-            memeId: id,
-            content: commentContent[id],
-          })
-        }
-      }}
-    >
-      <Flex alignItems="center">
-        <Avatar
-          borderWidth="1px"
-          borderColor="gray.300"
-          name={user?.username}
-          src={user?.pictureUrl}
-          size="sm"
-          mr={2}
-        />
-        <Input
-          placeholder="Type your comment here..."
-          onChange={(event) => {
-            setCommentContent({
-              ...commentContent,
-              [id]: event.target.value,
-            })
-          }}
-          value={commentContent[id]}
-        />
-      </Flex>
-    </form>
-  </Box>
-  <VStack align="stretch" spacing={4}>
-    {comments.map((comment) => (
-      <Flex key={comment.id}>
-        <Avatar
-          borderWidth="1px"
-          borderColor="gray.300"
-          size="sm"
-          name={comment.author.username}
-          src={comment.author.pictureUrl}
-          mr={2}
-        />
-        <Box p={2} borderRadius={8} bg="gray.50" flexGrow={1}>
-          <Flex justifyContent="space-between" alignItems="center">
-            <Flex>
-              <Text data-testid={`meme-comment-author-${id}-${comment.id}`}>
-                {comment.author.username}
-              </Text>
-            </Flex>
-            <Text fontStyle="italic" color="gray.500" fontSize="small">
-              {format(comment.createdAt)}
-            </Text>
-          </Flex>
-          <Text
-            color="gray.500"
-            whiteSpace="pre-line"
-            data-testid={`meme-comment-content-${id}-${comment.id}`}
-          >
-            {comment.content}
-          </Text>
-        </Box>
-      </Flex>
-    ))}
-  </VStack>
-</Collapse> */}
+      <MemeComments memeId={id} isOpen={openedCommentSection === id} />
     </VStack>
   )
 }
