@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 
 import { getMemes } from '../api'
 import { useAuthToken } from '../contexts/AuthContext'
-import { useMemes, useUsers } from '../contexts/MemeContext'
+import { useMemes } from '../contexts/MemeContext'
 import { getUsers } from '../api/services/getUsers'
 
 export const useMemeFeed = () => {
@@ -11,11 +11,11 @@ export const useMemeFeed = () => {
 
   const token = useAuthToken()
   const { setMemes } = useMemes()
-  const { setUsers } = useUsers()
 
   const fetchMemes = async ({ pageParam }: { pageParam: number }) => {
     const { results: memes, pageSize, total } = await getMemes(token, pageParam)
 
+    // remove duplicates before fetching users
     const userIds = [...new Set(memes.map((meme) => meme.authorId))]
     const users = await getUsers(token, userIds)
 
@@ -39,9 +39,17 @@ export const useMemeFeed = () => {
     console.log('data', data)
     const { pages = [] } = data || {}
     const newMemes = pages.map((page) => page.memes).flat()
-    setMemes(newMemes)
     const newUsers = [...new Set(pages.map((page) => page.users).flat())]
-    setUsers(newUsers.reduce((acc, user) => ({ ...acc, [user.id]: user }), {}))
+    setMemes(
+      newMemes.map((meme) => ({
+        ...meme,
+        author: newUsers.find((user) => user.id === meme.authorId) || {
+          id: 'unknown',
+          username: '[unknown user]',
+          pictureUrl: '',
+        },
+      }))
+    )
   }, [data?.pages?.length])
 
   if (status === 'error') {

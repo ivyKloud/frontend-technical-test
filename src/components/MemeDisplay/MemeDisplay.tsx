@@ -3,14 +3,13 @@ import { format } from 'timeago.js'
 
 import { MemePicture } from '../MemePicture'
 import { Meme } from '../../types'
-import { useUser } from '../../contexts/MemeContext'
 import { CaretDown, CaretUp, Chat } from '@phosphor-icons/react'
 
 export const MemeDisplay = ({ meme }: { meme: Meme }) => {
-  const author = useUser(meme.authorId)
+  const { id, pictureUrl, texts, description, createdAt, commentsCount, author } = meme
 
   return (
-    <VStack key={meme.id} p={4} width="full" align="stretch">
+    <VStack key={id} p={4} width="full" align="stretch">
       <Flex justifyContent="space-between" alignItems="center">
         <Flex>
           <Avatar
@@ -20,26 +19,22 @@ export const MemeDisplay = ({ meme }: { meme: Meme }) => {
             name={author.username}
             src={author.pictureUrl}
           />
-          <Text ml={2} data-testid={`meme-author-${meme.id}`}>
+          <Text ml={2} data-testid={`meme-author-${id}`}>
             {author.username}
           </Text>
         </Flex>
         <Text fontStyle="italic" color="gray.500" fontSize="small">
-          {format(meme.createdAt)}
+          {format(createdAt)}
         </Text>
       </Flex>
-      <MemePicture
-        pictureUrl={meme.pictureUrl}
-        texts={meme.texts}
-        dataTestId={`meme-picture-${meme.id}`}
-      />
+      <MemePicture pictureUrl={pictureUrl} texts={texts} dataTestId={`meme-picture-${id}`} />
       <Box>
         <Text fontWeight="bold" fontSize="medium" mb={2}>
           Description:{' '}
         </Text>
         <Box p={2} borderRadius={8} border="1px solid" borderColor="gray.100">
-          <Text color="gray.500" whiteSpace="pre-line" data-testid={`meme-description-${meme.id}`}>
-            {meme.description}
+          <Text color="gray.500" whiteSpace="pre-line" data-testid={`meme-description-${id}`}>
+            {description}
           </Text>
         </Box>
       </Box>
@@ -47,31 +42,29 @@ export const MemeDisplay = ({ meme }: { meme: Meme }) => {
         <Flex justifyContent="space-between" alignItems="center">
           <Flex alignItems="center">
             <LinkOverlay
-              data-testid={`meme-comments-section-${meme.id}`}
+              data-testid={`meme-comments-section-${id}`}
               cursor="pointer"
               // onClick={() =>
-              //   setOpenedCommentSection(openedCommentSection === meme.id ? null : meme.id)
+              //   setOpenedCommentSection(openedCommentSection === id ? null : id)
               // }
             >
-              <Text data-testid={`meme-comments-count-${meme.id}`}>
-                {meme.commentsCount} comments
-              </Text>
+              <Text data-testid={`meme-comments-count-${id}`}>{commentsCount} comments</Text>
             </LinkOverlay>
-            {/* <Icon as={openedCommentSection !== meme.id ? CaretDown : CaretUp} ml={2} mt={1} /> */}
+            {/* <Icon as={openedCommentSection !== id ? CaretDown : CaretUp} ml={2} mt={1} /> */}
             <Icon as={CaretDown} ml={2} mt={1} />
           </Flex>
           <Icon as={Chat} />
         </Flex>
       </LinkBox>
-      {/* <Collapse in={openedCommentSection === meme.id} animateOpacity>
+      {/* <Collapse in={openedCommentSection === id} animateOpacity>
   <Box mb={6}>
     <form
       onSubmit={(event) => {
         event.preventDefault()
-        if (commentContent[meme.id]) {
+        if (commentContent[id]) {
           mutate({
-            memeId: meme.id,
-            content: commentContent[meme.id],
+            memeId: id,
+            content: commentContent[id],
           })
         }
       }}
@@ -90,16 +83,16 @@ export const MemeDisplay = ({ meme }: { meme: Meme }) => {
           onChange={(event) => {
             setCommentContent({
               ...commentContent,
-              [meme.id]: event.target.value,
+              [id]: event.target.value,
             })
           }}
-          value={commentContent[meme.id]}
+          value={commentContent[id]}
         />
       </Flex>
     </form>
   </Box>
   <VStack align="stretch" spacing={4}>
-    {meme.comments.map((comment) => (
+    {comments.map((comment) => (
       <Flex key={comment.id}>
         <Avatar
           borderWidth="1px"
@@ -112,7 +105,7 @@ export const MemeDisplay = ({ meme }: { meme: Meme }) => {
         <Box p={2} borderRadius={8} bg="gray.50" flexGrow={1}>
           <Flex justifyContent="space-between" alignItems="center">
             <Flex>
-              <Text data-testid={`meme-comment-author-${meme.id}-${comment.id}`}>
+              <Text data-testid={`meme-comment-author-${id}-${comment.id}`}>
                 {comment.author.username}
               </Text>
             </Flex>
@@ -123,7 +116,7 @@ export const MemeDisplay = ({ meme }: { meme: Meme }) => {
           <Text
             color="gray.500"
             whiteSpace="pre-line"
-            data-testid={`meme-comment-content-${meme.id}-${comment.id}`}
+            data-testid={`meme-comment-content-${id}-${comment.id}`}
           >
             {comment.content}
           </Text>
