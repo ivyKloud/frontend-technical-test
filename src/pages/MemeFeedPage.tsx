@@ -20,7 +20,6 @@ export const MemeFeedPage = () => {
   }
   return (
     <Flex width="full" height="full" justifyContent="center" overflowY="auto">
-      hello
       <VStack p={4} width="full" maxWidth={800} divider={<StackDivider border="gray.200" />}>
         {memes?.map((meme) => {
           return <MemeDisplay meme={meme} key={meme.id} />

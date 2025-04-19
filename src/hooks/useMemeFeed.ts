@@ -1,26 +1,25 @@
-import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query'
-import { jwtDecode } from 'jwt-decode'
-import { useEffect, useState } from 'react'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 
-import { createMemeComment, getMemeComments, getMemes, getUserById } from '../api'
+import { getMemes } from '../api'
 import { useAuthToken } from '../contexts/AuthContext'
-import { Meme, MemeComment, User } from '../types'
-import { useMemes } from '../contexts/MemeContext'
-import { useGetMemes } from './useGetMemes'
-import { a } from 'vitest/dist/chunks/suite.CcK46U-P.js'
+import { useMemes, useUsers } from '../contexts/MemeContext'
+import { getUsers } from '../api/services/getUsers'
 
 export const useMemeFeed = () => {
   console.log('useMemeFeed')
 
   const token = useAuthToken()
-  //   const [isLoading, setIsLoading] = useState(false)
-  const { memes, setMemes } = useMemes()
+  const { setMemes } = useMemes()
+  const { setUsers } = useUsers()
 
   const fetchMemes = async ({ pageParam }: { pageParam: number }) => {
-    const memes = await getMemes(token, pageParam)
-    console.log('memes size', memes.results.length)
+    const { results: memes, pageSize, total } = await getMemes(token, pageParam)
 
-    return memes
+    const userIds = [...new Set(memes.map((meme) => meme.authorId))]
+    const users = await getUsers(token, userIds)
+
+    return { memes, users, pageSize, total }
   }
 
   const { data, fetchNextPage, status, error, isLoading, hasNextPage } = useInfiniteQuery({
@@ -36,39 +35,24 @@ export const useMemeFeed = () => {
     },
   })
 
-  //   if (status === 'success') {
-  //     setIsLoading(false)
-  //     console.log('success')
-
-  //     // console.log('data on success', data)
-
-  //     //   setMemes((prev) => [...prev, ...data.pages.flat()])
-  //   }
+  useEffect(() => {
+    console.log('data', data)
+    const { pages = [] } = data || {}
+    const newMemes = pages.map((page) => page.memes).flat()
+    setMemes(newMemes)
+    const newUsers = [...new Set(pages.map((page) => page.users).flat())]
+    setUsers(newUsers.reduce((acc, user) => ({ ...acc, [user.id]: user }), {}))
+  }, [data?.pages?.length])
 
   if (status === 'error') {
-    // setIsLoading(false)
     console.log('error', error)
   }
 
-  console.log('data', data)
+  // useEffect(() => {
+  //   console.log('users', users)
+  // }, [users])
 
   //   const { memes: newMemes = [] } = useGetMemes(token, currentPage, setIsLoading)
-
-  //   useEffect(() => {
-  //     console.log('coucou')
-  //     console.log('memes', memes)
-  //     console.log('newMemes', newMemes)
-  //     if (newMemes.length === 0) return
-
-  //     // const user = useGetUser(token, memes[0]?.authorId)
-  //     setMemes([...memes, ...newMemes])
-
-  //     // return { isLoading, memes }
-  //   }, [newMemes])
-
-  useEffect(() => {
-    console.log('memes from context', memes)
-  }, [memes.length])
 
   // const [openedCommentSection, setOpenedCommentSection] = useState<string | null>(null)
   // const [commentContent, setCommentContent] = useState<{

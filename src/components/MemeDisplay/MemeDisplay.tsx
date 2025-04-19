@@ -1,29 +1,29 @@
-import { Avatar, Box, Flex, Text, VStack } from '@chakra-ui/react'
+import { Avatar, Box, Flex, Icon, LinkBox, LinkOverlay, Text, VStack } from '@chakra-ui/react'
 import { format } from 'timeago.js'
 
 import { MemePicture } from '../MemePicture'
 import { Meme } from '../../types'
+import { useUser } from '../../contexts/MemeContext'
+import { CaretDown, CaretUp, Chat } from '@phosphor-icons/react'
 
 export const MemeDisplay = ({ meme }: { meme: Meme }) => {
-  //   const author = useUser(meme.authorId)
+  const author = useUser(meme.authorId)
 
   return (
     <VStack key={meme.id} p={4} width="full" align="stretch">
-      <Box>meme id : {meme.id}</Box>
-
       <Flex justifyContent="space-between" alignItems="center">
-        {/* <Flex>
-        <Avatar
-          borderWidth="1px"
-          borderColor="gray.300"
-          size="xs"
-          name={meme.author.username}
-          src={meme.author.pictureUrl}
-        />
-        <Text ml={2} data-testid={`meme-author-${meme.id}`}>
-          {meme.author.username}
-        </Text>
-      </Flex> */}
+        <Flex>
+          <Avatar
+            borderWidth="1px"
+            borderColor="gray.300"
+            size="xs"
+            name={author.username}
+            src={author.pictureUrl}
+          />
+          <Text ml={2} data-testid={`meme-author-${meme.id}`}>
+            {author.username}
+          </Text>
+        </Flex>
         <Text fontStyle="italic" color="gray.500" fontSize="small">
           {format(meme.createdAt)}
         </Text>
@@ -43,30 +43,27 @@ export const MemeDisplay = ({ meme }: { meme: Meme }) => {
           </Text>
         </Box>
       </Box>
-      {/* <LinkBox as={Box} py={2} borderBottom="1px solid black">
-  <Flex justifyContent="space-between" alignItems="center">
-    <Flex alignItems="center">
-      <LinkOverlay
-        data-testid={`meme-comments-section-${meme.id}`}
-        cursor="pointer"
-        onClick={() =>
-          setOpenedCommentSection(openedCommentSection === meme.id ? null : meme.id)
-        }
-      >
-        <Text data-testid={`meme-comments-count-${meme.id}`}>
-          {meme.commentsCount} comments
-        </Text>
-      </LinkOverlay>
-      <Icon
-        as={openedCommentSection !== meme.id ? CaretDown : CaretUp}
-        ml={2}
-        mt={1}
-      />
-    </Flex>
-    <Icon as={Chat} />
-  </Flex>
-</LinkBox>
-<Collapse in={openedCommentSection === meme.id} animateOpacity>
+      <LinkBox as={Box} py={2} borderBottom="1px solid black">
+        <Flex justifyContent="space-between" alignItems="center">
+          <Flex alignItems="center">
+            <LinkOverlay
+              data-testid={`meme-comments-section-${meme.id}`}
+              cursor="pointer"
+              // onClick={() =>
+              //   setOpenedCommentSection(openedCommentSection === meme.id ? null : meme.id)
+              // }
+            >
+              <Text data-testid={`meme-comments-count-${meme.id}`}>
+                {meme.commentsCount} comments
+              </Text>
+            </LinkOverlay>
+            {/* <Icon as={openedCommentSection !== meme.id ? CaretDown : CaretUp} ml={2} mt={1} /> */}
+            <Icon as={CaretDown} ml={2} mt={1} />
+          </Flex>
+          <Icon as={Chat} />
+        </Flex>
+      </LinkBox>
+      {/* <Collapse in={openedCommentSection === meme.id} animateOpacity>
   <Box mb={6}>
     <form
       onSubmit={(event) => {
