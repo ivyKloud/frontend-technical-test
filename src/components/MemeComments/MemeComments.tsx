@@ -1,88 +1,60 @@
-import { Avatar, Box, Collapse, Flex, Input, Text, VStack } from '@chakra-ui/react'
-import { format } from 'timeago.js'
+import { Box, Collapse, Flex, Text, VStack } from '@chakra-ui/react'
 import { useMemeComments } from '../../hooks/useMemeComments'
 import { LoadNextButton } from '../LoadNextButton'
+import { Loader } from '../Loader'
+import { DateDisplay } from '../DateDisplay'
+import { Avatar, Username } from '../UserDisplay'
+import { CreateComment } from '../CreateComment'
 
-export const MemeComments = ({ memeId, isOpen }: { memeId: string; isOpen: boolean }) => {
-  //   const [commentContent, setCommentContent] = useState<{ [key: string]: string }>({})
+export const MemeComments = ({
+  memeId,
+  commentsCount,
+  isOpen,
+}: {
+  memeId: string
+  commentsCount: number
+  isOpen: boolean
+}) => {
   const {
     memeComments: comments,
     hasNextPage,
     fetchNextPage,
     isLoading,
-  } = useMemeComments(memeId, isOpen)
-  console.log('MemeComments > comments', comments)
+  } = useMemeComments(memeId, isOpen && commentsCount > 0)
 
   return (
     <Collapse in={isOpen} animateOpacity>
-      {/* <Box mb={6}>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault()
-            if (commentContent[id]) {
-              mutate({
-                memeId: id,
-                content: commentContent[id],
-              })
-            }
-          }}
-        >
-          <Flex alignItems="center">
-            <Avatar
-              borderWidth="1px"
-              borderColor="gray.300"
-              name={user?.username}
-              src={user?.pictureUrl}
-              size="sm"
-              mr={2}
-            />
-            <Input
-              placeholder="Type your comment here..."
-              onChange={(event) => {
-                setCommentContent({
-                  ...commentContent,
-                  [id]: event.target.value,
-                })
-              }}
-              value={commentContent[id]}
-            />
-          </Flex>
-        </form>
-      </Box> */}
-      <VStack align="stretch" spacing={4}>
-        {comments.map((comment) => (
-          <Flex key={comment.id}>
-            <Avatar
-              borderWidth="1px"
-              borderColor="gray.300"
-              size="sm"
-              name={comment.author.username}
-              src={comment.author.pictureUrl}
-              mr={2}
-            />
-            <Box p={2} borderRadius={8} bg="gray.50" flexGrow={1}>
-              <Flex justifyContent="space-between" alignItems="center">
-                <Flex>
-                  <Text data-testid={`meme-comment-author-${memeId}-${comment.id}`}>
-                    {comment.author.username}
-                  </Text>
+      <CreateComment memeId={memeId} />
+      {isLoading ? (
+        <Loader data-testid="meme-feed-loader" />
+      ) : (
+        <VStack align="stretch" spacing={4}>
+          {comments.map((comment) => (
+            <Flex key={comment.id}>
+              <Avatar username={comment.author.username} pictureUrl={comment.author.pictureUrl} />
+              <Box p={2} borderRadius={8} bg="gray.50" flexGrow={1}>
+                <Flex justifyContent="space-between" alignItems="center">
+                  <Flex>
+                    <Username
+                      username={comment.author.username}
+                      dataTestId={`meme-comment-author-${memeId}-${comment.id}`}
+                    />
+                  </Flex>
+                  <DateDisplay date={comment.createdAt} />
                 </Flex>
-                <Text fontStyle="italic" color="gray.500" fontSize="small">
-                  {format(comment.createdAt)}
+                <Text
+                  color="gray.500"
+                  whiteSpace="pre-line"
+                  data-testid={`meme-comment-content-${memeId}-${comment.id}`}
+                >
+                  {comment.content}
                 </Text>
-              </Flex>
-              <Text
-                color="gray.500"
-                whiteSpace="pre-line"
-                data-testid={`meme-comment-content-${memeId}-${comment.id}`}
-              >
-                {comment.content}
-              </Text>
-            </Box>
-          </Flex>
-        ))}
-        {hasNextPage && <LoadNextButton fetchNextPage={fetchNextPage} />}
-      </VStack>
+              </Box>
+            </Flex>
+          ))}
+          {hasNextPage && <LoadNextButton fetchNextPage={fetchNextPage} />}
+        </VStack>
+      )}
     </Collapse>
   )
 }
