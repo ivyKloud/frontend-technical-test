@@ -2,9 +2,15 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 
 import { getMemeComments, getUsers } from '../api'
 import { useAuthToken } from '../contexts/AuthContext'
+import { QueryKeys } from './queryKeys'
 
-const fetchMemeComments = async (props: { pageParam: number; queryKey: string[] }) => {
-  const { pageParam, queryKey } = props
+const fetchMemeComments = async ({
+  pageParam,
+  queryKey,
+}: {
+  pageParam: number
+  queryKey: string[]
+}) => {
   const token = queryKey?.[1] as string
   const memeId = queryKey?.[2] as string
 
@@ -25,7 +31,7 @@ export const useMemeComments = (memeId: string, enabled: boolean) => {
   const token = useAuthToken()
 
   const { data, fetchNextPage, status, error, isLoading, hasNextPage } = useInfiniteQuery({
-    queryKey: ['meme comments', token, memeId],
+    queryKey: [QueryKeys.MEME_COMMENTS, token, memeId],
     queryFn: fetchMemeComments,
     initialPageParam: 1,
     getNextPageParam: ({ pageSize, total }, _, lasPageParam) => {
@@ -54,15 +60,6 @@ export const useMemeComments = (memeId: string, enabled: boolean) => {
     console.log('error', error)
   }
 
-  // const [openedCommentSection, setOpenedCommentSection] = useState<string | null>(null)
-  // const [commentContent, setCommentContent] = useState<{
-  //   [key: string]: string
-  // }>({})
-  // const { mutate } = useMutation({
-  //   mutationFn: async (data: { memeId: string; content: string }) => {
-  //     await createMemeComment(token, data.memeId, data.content)
-  //   },
-  // })
   return {
     isLoading,
     fetchNextPage,

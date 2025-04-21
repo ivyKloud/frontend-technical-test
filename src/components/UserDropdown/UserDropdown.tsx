@@ -3,11 +3,12 @@ import { useQuery } from '@tanstack/react-query'
 import { CaretDown, CaretUp, SignOut } from '@phosphor-icons/react'
 import { useAuthentication } from '../../contexts/AuthContext'
 import { getUserById } from '../../api'
+import { QueryKeys } from '../../hooks/queryKeys'
 
 export const UserDropdown: React.FC = () => {
   const { state, signout } = useAuthentication()
   const { data: user, isLoading } = useQuery({
-    queryKey: ['user', state.isAuthenticated ? state.userId : 'anon'],
+    queryKey: [QueryKeys.USER, state.isAuthenticated ? state.userId : 'anon'],
     queryFn: () => {
       if (state.isAuthenticated) {
         return getUserById(state.token, state.userId)

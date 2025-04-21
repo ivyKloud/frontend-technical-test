@@ -2,6 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 
 import { getMemes, getUsers } from '../api'
 import { useAuthToken } from '../contexts/AuthContext'
+import { QueryKeys } from './queryKeys'
 
 const fetchMemes = async ({ pageParam, queryKey }: { pageParam: number; queryKey: string[] }) => {
   const token = queryKey[1] as string
@@ -18,7 +19,7 @@ export const useMemeFeed = () => {
   const token = useAuthToken()
 
   const { data, fetchNextPage, status, error, isLoading, hasNextPage } = useInfiniteQuery({
-    queryKey: ['memes', token],
+    queryKey: [QueryKeys.MEMES, token],
     queryFn: fetchMemes,
     initialPageParam: 1,
     getNextPageParam: ({ pageSize, total }, _, lasPageParam) => {
@@ -46,14 +47,5 @@ export const useMemeFeed = () => {
     console.log('error', error)
   }
 
-  // const [openedCommentSection, setOpenedCommentSection] = useState<string | null>(null)
-  // const [commentContent, setCommentContent] = useState<{
-  //   [key: string]: string
-  // }>({})
-  // const { mutate } = useMutation({
-  //   mutationFn: async (data: { memeId: string; content: string }) => {
-  //     await createMemeComment(token, data.memeId, data.content)
-  //   },
-  // })
   return { memes: memesWithAuthor, isLoading, fetchNextPage, hasNextPage }
 }
