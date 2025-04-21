@@ -1,22 +1,19 @@
+import { useEffect } from 'react'
 import { Menu, MenuButton, Text, MenuList, MenuItem, Avatar, Icon, Flex } from '@chakra-ui/react'
-import { useQuery } from '@tanstack/react-query'
 import { CaretDown, CaretUp, SignOut } from '@phosphor-icons/react'
+
 import { useAuthentication } from '../../contexts/AuthContext'
-import { getUserById } from '../../api'
-import { QueryKeys } from '../../hooks/queryKeys'
+import { useUserData } from '../../hooks/useUserData'
+import { useUser } from '../../contexts/UserContext'
 
 export const UserDropdown: React.FC = () => {
   const { state, signout } = useAuthentication()
-  const { data: user, isLoading } = useQuery({
-    queryKey: [QueryKeys.USER, state.isAuthenticated ? state.userId : 'anon'],
-    queryFn: () => {
-      if (state.isAuthenticated) {
-        return getUserById(state.token, state.userId)
-      }
-      return null
-    },
-    enabled: state.isAuthenticated,
-  })
+  const { setUser } = useUser()
+  const { user, isLoading } = useUserData(state)
+
+  useEffect(() => {
+    setUser(user)
+  }, [user])
 
   if (!state.isAuthenticated || isLoading) {
     return null

@@ -3,7 +3,7 @@ import { User } from '../../types'
 
 export type UserContextProps = {
   user: User | undefined
-  setUser: (user: User) => void
+  setUser: (user: User | undefined) => void
 }
 
 export const UserContext = createContext<UserContextProps>({
