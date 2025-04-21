@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 import { AuthenticationProvider, useAuthentication } from './contexts/AuthContext'
+import { UserProvider } from './contexts/UserContext'
 
 // Create a new router instance
 const router = createRouter({
@@ -37,7 +38,9 @@ if (!rootElement.innerHTML) {
       <QueryClientProvider client={queryClient}>
         <ChakraProvider theme={theme}>
           <AuthenticationProvider>
-            <InnerApp />
+            <UserProvider>
+              <InnerApp />
+            </UserProvider>
           </AuthenticationProvider>
         </ChakraProvider>
       </QueryClientProvider>
