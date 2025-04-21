@@ -2,14 +2,20 @@ import { Avatar, Box, Flex, Icon, LinkBox, LinkOverlay, Text, VStack } from '@ch
 import { format } from 'timeago.js'
 
 import { MemePicture } from '../MemePicture'
-import { Meme } from '../../types'
 import { CaretDown, CaretUp, Chat } from '@phosphor-icons/react'
-import { useState } from 'react'
 import { MemeComments } from '../MemeComments'
+import { Meme } from '../../types'
 
-export const MemeDisplay = ({ meme }: { meme: Meme }) => {
+export const MemeDisplay = ({
+  meme,
+  activeMeme,
+  setActiveMeme,
+}: {
+  meme: Meme
+  activeMeme: string
+  setActiveMeme: (id: string) => void
+}) => {
   const { id, pictureUrl, texts, description, createdAt, commentsCount, author } = meme
-  const [openedCommentSection, setOpenedCommentSection] = useState<string | null>(null)
 
   return (
     <VStack key={id} p={4} width="full" align="stretch">
@@ -47,16 +53,16 @@ export const MemeDisplay = ({ meme }: { meme: Meme }) => {
             <LinkOverlay
               data-testid={`meme-comments-section-${id}`}
               cursor="pointer"
-              onClick={() => setOpenedCommentSection(openedCommentSection === id ? null : id)}
+              onClick={() => setActiveMeme(activeMeme === id ? '' : id)}
             >
               <Text data-testid={`meme-comments-count-${id}`}>{commentsCount} comments</Text>
             </LinkOverlay>
-            <Icon as={openedCommentSection !== id ? CaretDown : CaretUp} ml={2} mt={1} />
+            <Icon as={activeMeme !== id ? CaretDown : CaretUp} ml={2} mt={1} />
           </Flex>
           <Icon as={Chat} />
         </Flex>
       </LinkBox>
-      <MemeComments memeId={id} isOpen={openedCommentSection === id} />
+      <MemeComments memeId={id} isOpen={activeMeme === id} />
     </VStack>
   )
 }

@@ -35,9 +35,9 @@ export const useMemeFeed = () => {
   })
 
   const { pages = [] } = data || {}
-  const newMemes = pages.map((page) => page.memes).flat()
+  const memes = pages.map((page) => page.memes).flat()
   const newUsers = [...new Set(pages.map((page) => page.users).flat())]
-  const memes = newMemes.map((meme) => ({
+  const memesWithAuthor = memes.map((meme) => ({
     ...meme,
     author: newUsers.find((user) => user.id === meme.authorId) || {
       id: 'unknown',
@@ -59,5 +59,5 @@ export const useMemeFeed = () => {
   //     await createMemeComment(token, data.memeId, data.content)
   //   },
   // })
-  return { memes, isLoading, fetchNextPage, hasNextPage }
+  return { memes: memesWithAuthor, isLoading, fetchNextPage, hasNextPage }
 }

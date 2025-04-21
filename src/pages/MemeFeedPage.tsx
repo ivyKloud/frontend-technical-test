@@ -34,7 +34,7 @@ export const MemeFeedPage = () => {
             />
           )
         })}
-        {hasNextPage && <LoadNextButton loadNextPage={fetchNextPage} />}
+        {hasNextPage && <LoadNextButton fetchNextPage={fetchNextPage} />}
       </VStack>
     </Flex>
   )

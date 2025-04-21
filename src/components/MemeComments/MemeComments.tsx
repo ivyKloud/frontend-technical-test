@@ -1,16 +1,20 @@
 import { Avatar, Box, Collapse, Flex, Input, Text, VStack } from '@chakra-ui/react'
-import { MemeComment } from '../../types'
 import { format } from 'timeago.js'
-import { useState } from 'react'
+import { useMemeComments } from '../../hooks/useMemeComments'
+import { LoadNextButton } from '../LoadNextButton'
 
 export const MemeComments = ({ memeId, isOpen }: { memeId: string; isOpen: boolean }) => {
   //   const [commentContent, setCommentContent] = useState<{ [key: string]: string }>({})
-
-  const comments: MemeComment[] = []
+  const {
+    memeComments: comments,
+    hasNextPage,
+    fetchNextPage,
+    isLoading,
+  } = useMemeComments(memeId, isOpen)
+  console.log('MemeComments > comments', comments)
 
   return (
     <Collapse in={isOpen} animateOpacity>
-      hhhh
       {/* <Box mb={6}>
         <form
           onSubmit={(event) => {
@@ -77,6 +81,7 @@ export const MemeComments = ({ memeId, isOpen }: { memeId: string; isOpen: boole
             </Box>
           </Flex>
         ))}
+        {hasNextPage && <LoadNextButton fetchNextPage={fetchNextPage} />}
       </VStack>
     </Collapse>
   )
