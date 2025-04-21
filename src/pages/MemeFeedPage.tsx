@@ -10,14 +10,6 @@ export const MemeFeedPage = () => {
   const [activeMeme, setActiveMeme] = useState('')
   const { memes, isLoading, fetchNextPage, hasNextPage } = useMemeFeed()
 
-  useEffect(() => {
-    console.log('isLoading', isLoading)
-  }, [isLoading])
-
-  useEffect(() => {
-    console.log('memes', memes.length)
-  }, [memes])
-
   if (isLoading) {
     return <Loader data-testid="meme-feed-loader" />
   }

@@ -1,6 +1,6 @@
-import { User } from "../../types";
-import { BASE_URL } from "../constants";
-import { checkStatus } from "../helpers/checkStatus";
+import { User } from '../../types'
+import { BASE_URL } from '../constants'
+import { checkStatus } from '../helpers/checkStatus'
 
 /**
  * Get a user by their id
@@ -9,12 +9,10 @@ import { checkStatus } from "../helpers/checkStatus";
  * @returns
  */
 export async function getUserById(token: string, id: string): Promise<User> {
-  console.log(`Fetching user ${id}`);
-
   return await fetch(`${BASE_URL}/users/${id}`, {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-  }).then((res) => checkStatus(res).json());
+  }).then((res) => checkStatus(res).json())
 }

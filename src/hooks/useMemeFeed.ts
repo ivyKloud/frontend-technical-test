@@ -4,8 +4,6 @@ import { getMemes, getUsers } from '../api'
 import { useAuthToken } from '../contexts/AuthContext'
 
 const fetchMemes = async ({ pageParam, queryKey }: { pageParam: number; queryKey: string[] }) => {
-  console.log('useMemeFeed > fetchMemes')
-
   const token = queryKey[1] as string
   const { results: memes, pageSize, total } = await getMemes(token, pageParam)
 
@@ -17,8 +15,6 @@ const fetchMemes = async ({ pageParam, queryKey }: { pageParam: number; queryKey
 }
 
 export const useMemeFeed = () => {
-  console.log('useMemeFeed')
-
   const token = useAuthToken()
 
   const { data, fetchNextPage, status, error, isLoading, hasNextPage } = useInfiniteQuery({

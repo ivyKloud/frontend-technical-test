@@ -5,11 +5,8 @@ import { useAuthToken } from '../contexts/AuthContext'
 
 const fetchMemeComments = async (props: { pageParam: number; queryKey: string[] }) => {
   const { pageParam, queryKey } = props
-  console.log('pageParam', pageParam)
   const token = queryKey?.[1] as string
   const memeId = queryKey?.[2] as string
-  console.log('memeId', memeId)
-  console.log('fetchMemeComments', memeId)
 
   if (!memeId || memeId === '') {
     return { memeComments: [], users: [], pageSize: 0, total: 0 }
@@ -25,8 +22,6 @@ const fetchMemeComments = async (props: { pageParam: number; queryKey: string[] 
 }
 
 export const useMemeComments = (memeId: string, enabled: boolean) => {
-  console.log('useMemeComments', memeId)
-
   const token = useAuthToken()
 
   const { data, fetchNextPage, status, error, isLoading, hasNextPage } = useInfiniteQuery({
@@ -43,8 +38,6 @@ export const useMemeComments = (memeId: string, enabled: boolean) => {
     enabled,
   })
 
-  console.log('useMemeComments > data', data)
-
   const { pages = [] } = data || {}
   const memeComments = pages.map((page) => page.memeComments).flat()
   const newUsers = [...new Set(pages.map((page) => page.users).flat())]
@@ -60,8 +53,6 @@ export const useMemeComments = (memeId: string, enabled: boolean) => {
   if (status === 'error') {
     console.log('error', error)
   }
-
-  //   const { memes: newMemes = [] } = useGetMemes(token, currentPage, setIsLoading)
 
   // const [openedCommentSection, setOpenedCommentSection] = useState<string | null>(null)
   // const [commentContent, setCommentContent] = useState<{

@@ -9,8 +9,6 @@ import { checkStatus } from '../helpers/checkStatus'
  * @returns
  */
 export async function getUsers(token: string, ids: string[]): Promise<User[]> {
-  console.log(`Fetching users ${ids}`)
-
   return await fetch(`${BASE_URL}/users?${ids.map((id) => `ids=${id}`).join('&')}`, {
     headers: {
       'Content-Type': 'application/json',
